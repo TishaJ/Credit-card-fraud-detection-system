@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><!-- Specifies the character encoding for the document -->
+    <title>Payment</title><!-- Title of the webpage -->
+    <link rel="stylesheet" href="../static/CSS/style.css">
+    <!---we had linked our css file----->
+</head>
+
+<body>
+         <!-- Main container with background image -->
+        <div class="container" style="background-image: url(../static/images/bg.jpg); width: 100%; height: 100%;">
+
+            <!-- Form for payment information -->
+            <form action="http://127.0.0.1:5000/predict" method="POST">
+
+                <!-- Form content is divided into two columns -->
+                <div class="row">
+
+                    <!-- Column for billing address -->
+                    <div class="col">
+
+                        <!-- Title of the column -->
+                        <h3 class="title">Billing Address</h3>
+
+                        <div class="inputBox">
+                            <label for="street">Street:</label>
+                            <input type="text" id="street" name="street" placeholder="123 Main St" required>
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" name="city" placeholder="New York" required>
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="state">State:</label>
+                            <input type="text" id="state" name="state" placeholder="NY" required>
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="Zip_code">Zip Code:</label>
+                            <input type="text" id="Zip_code" name="Zip_code" placeholder="10001" pattern="\d{5}" required>
+                        </div>
+
+                        <span>cards accepted :</span>
+                        <img src="../static/images/card_img.png" alt="">
+
+                    </div>
+
+                    <!-- Column for payment details -->
+                    <div class="col">
+                        
+                        <!-- Title of the column -->
+                        <h3 class="title">Payment Details</h3>
+
+                        <div class="inputBox">
+                            <label for="card_holder">Card Holder:</label>
+                            <input type="text" id="card_holder" name="card_holder" placeholder="John Doe">
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="credit_card_number">Credit Card Number:</label>
+                            <input type="text" id="credit_card_number" name="credit_card_number" placeholder="1234 5678 1234 5678" pattern="\d{16}" >
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="exp_month">Exp Month:</label>
+                            <input type="month" id="exp_month" name="exp_month" >
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="exp_year">Exp Year:</label>
+                            <input type="text" id="exp_year" name="exp_year" placeholder="2022" pattern="\d{4}" >
+                        </div>
+
+                        <div class="inputBox">
+                            <label for="cvv">CVV:</label>
+                            <input type="text" id="cvv" name="cvv" pattern="\d{3,4}" >
+                        </div>
+
+                        <input type="submit" value="Submit" class="submit-btn">
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+ <!-- linked the JavaScript file -->   
+ <script type="text/javascript" src="../static/CSS/style.js"></script>
+
+    </body>
+</html>
