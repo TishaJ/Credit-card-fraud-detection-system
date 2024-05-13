@@ -7,6 +7,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from imblearn.over_sampling import SMOTE
 import seaborn as sns
+import scipy.sparse as sp
 import matplotlib.pyplot as plt
 import pickle
 import os
@@ -152,17 +153,21 @@ def apply_smote(X_train, Y_train):
     try:
         X_resampled, Y_resampled = smote.fit_resample(X_train, Y_train)
         # Ensure the lengths match to avoid mismatch issues
-        assert len(X_resampled) == len(Y_resampled), "Mismatch in resampled data."
-        return X_resampled, Y_resampled  # Only return these two values
+        if sp.issparse(X_resampled):
+            assert X_resampled.shape[0] == len(Y_resampled), "Mismatch in resampled data."
+        else:
+            assert len(X_resampled) == len(Y_resampled), "Mismatch in resampled data."
+        return X_resampled, Y_resampled
+    except AssertionError as ae:
+        raise RuntimeError(f"Error: {ae}")
     except Exception as e:
         raise RuntimeError(f"Error during SMOTE application: {e}")
-
-
+    
 # Define functions for model training and evaluation for each use case
 def use_case_1(df):
     # Define features for preprocessing
-    features = ['State', 'City', 'Street', 'Zip_code']
-    categorical_columns = ['State', 'City', 'Street','Zip_code']
+    features = ['State', 'City', 'Street', 'zip_code']
+    categorical_columns = ['State', 'City', 'Street','zip_code']
 
     # Call preprocess_data and unpack the results
     X_encoded, Y, preprocessor, success, result_message = preprocess_data(df, features, categorical_columns)
