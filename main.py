@@ -195,34 +195,6 @@ def use_case_1(df):
 
 def use_case_2(df):
     # Features for Use Case 2
-    features = ['Hour', 'DaysOfWeek', 'unix_time', 'TimeSinceLastTransaction']
-    
-    # Call preprocess_data and unpack the results
-    X_encoded, Y, preprocessor, success, result_message = preprocess_data(df, features)
-
-    # Check if preprocessing was successful
-    if not success:
-        raise RuntimeError(f"Preprocessing failed: {result_message}")
-
-    # Continue with other processing if successful
-    # Split the data
-    X_train, X_test, Y_train, Y_test = train_test_split(X_encoded, Y, test_size=0.2, stratify=Y, random_state=2)
-    
-    # Apply SMOTE to the training data
-    X_train, Y_train = apply_smote(X_train, Y_train)
-    
-    # Train the model (Logistic Regression with L2 regularization)
-    model = LogisticRegression(solver='saga', max_iter=500, penalty='l2', C=1.0)
-
-    model.fit(X_train, Y_train)
-    
-    # Evaluate the model
-    metrics = evaluate_model(model, X_train, X_test, Y_train, Y_test,use_case=2)
-    
-    return model, preprocessor, metrics
-
-def use_case_3(df):
-    # Features for Use Case 3
     features = ['MerchantCategory', 'MerchantName', 'Amount', 'Frequency','first','last']
     categorical_columns = ['MerchantCategory', 'MerchantName','first','last']
     
@@ -245,13 +217,41 @@ def use_case_3(df):
     model.fit(X_train, Y_train)
     
     # Evaluate the model
+    metrics = evaluate_model(model, X_train, X_test, Y_train, Y_test,use_case=2)
+    
+    return model, preprocessor, metrics
+
+def use_case_3(df):
+    # Features for Use Case 3
+    features = ['Amount', 'AverageTransactionAmount','unix_time']
+    
+    # Call preprocess_data and unpack the results
+    X_encoded, Y, preprocessor, success, result_message = preprocess_data(df, features)
+
+    # Check if preprocessing was successful
+    if not success:
+        raise RuntimeError(f"Preprocessing failed: {result_message}")
+
+    # Continue with other processing if successful
+    
+    # Split the data
+    X_train, X_test, Y_train, Y_test = train_test_split(X_encoded, Y, test_size=0.2, stratify=Y, random_state=2)
+    
+    # Apply SMOTE to the training data
+    X_train, Y_train = apply_smote(X_train, Y_train)
+    
+    # Train the model (Random Forest)
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, Y_train)
+    
+    # Evaluate the model
     metrics = evaluate_model(model, X_train, X_test, Y_train, Y_test,use_case=3)
     
     return model, preprocessor, metrics
 
 def use_case_4(df):
     # Features for Use Case 4
-    features = ['Amount', 'AverageTransactionAmount', 'TimeSinceLastTransaction']
+    features = ['Amount', 'FrequencyOfTransactionWithSameAmount']
     
     # Call preprocess_data and unpack the results
     X_encoded, Y, preprocessor, success, result_message = preprocess_data(df, features)
@@ -277,45 +277,16 @@ def use_case_4(df):
     
     return model, preprocessor, metrics
 
-def use_case_5(df):
-    # Features for Use Case 5
-    features = ['Amount', 'FrequencyOfTransactionWithSameAmount']
-    
-    # Call preprocess_data and unpack the results
-    X_encoded, Y, preprocessor, success, result_message = preprocess_data(df, features)
-
-    # Check if preprocessing was successful
-    if not success:
-        raise RuntimeError(f"Preprocessing failed: {result_message}")
-
-    # Continue with other processing if successful
-    
-    # Split the data
-    X_train, X_test, Y_train, Y_test = train_test_split(X_encoded, Y, test_size=0.2, stratify=Y, random_state=2)
-    
-    # Apply SMOTE to the training data
-    X_train, Y_train = apply_smote(X_train, Y_train)
-    
-    # Train the model (Random Forest)
-    model = RandomForestClassifier(random_state=42)
-    model.fit(X_train, Y_train)
-    
-    # Evaluate the model
-    metrics = evaluate_model(model, X_train, X_test, Y_train, Y_test,use_case=5)
-    
-    return model, preprocessor, metrics
-
 # Run each use case
 model_uc1, preprocessor_uc1, metrics_uc1 = use_case_1(df)
 model_uc2, preprocessor_uc2, metrics_uc2 = use_case_2(df)
 model_uc3, preprocessor_uc3, metrics_uc3 = use_case_3(df)
 model_uc4, preprocessor_uc4, metrics_uc4 = use_case_4(df)
-model_uc5, preprocessor_uc5, metrics_uc5 = use_case_5(df)
 
 print('Successfully completed all use cases.')
 
 # Directory where the models will be stored
-models_directory = "FYP/models"
+models_directory = "models"
 os.makedirs(models_directory, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Save the models and preprocessors for each use case
@@ -337,15 +308,9 @@ with open(os.path.join(models_directory, "uc3_model.pickle"), "wb") as f:
 with open(os.path.join(models_directory, "uc3_preprocessor.pickle"), "wb") as f:
     pickle.dump(preprocessor_uc3, f)
 
-# Repeat for use_case_4 and use_case_5
 with open(os.path.join(models_directory, "uc4_model.pickle"), "wb") as f:
     pickle.dump(model_uc4, f)
 
 with open(os.path.join(models_directory, "uc4_preprocessor.pickle"), "wb") as f:
     pickle.dump(preprocessor_uc4, f)
 
-with open(os.path.join(models_directory, "uc5_model.pickle"), "wb") as f:
-    pickle.dump(model_uc5, f)
-
-with open(os.path.join(models_directory, "uc5_preprocessor.pickle"), "wb") as f:
-    pickle.dump(preprocessor_uc5, f)
