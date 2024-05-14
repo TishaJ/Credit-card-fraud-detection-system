@@ -26,18 +26,17 @@ def index():
     # Render the payment.html template
     return render_template('payment.html')
 
-@app.route('/predict', methods=['GET','POST'])
-
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
         # Retrieve form data
         street = request.form.get('street')
         city = request.form.get('city')
         state = request.form.get('state')
-        Zip_code = request.form.get('Zip_code')
+        zip_code = request.form.get('zip_code')
 
         # Check for missing data
-        if not all([street, city, state, Zip_code]):
+        if not all([street, city, state, zip_code]):
             raise ValueError("Missing one or more required fields.")
 
         # Create a DataFrame with the received data
@@ -45,7 +44,7 @@ def predict():
             "Street": [street],
             "City": [city],
             "State": [state],
-            "Zip_Code": [Zip_code]
+            "zip_code": [zip_code]
         })
 
         # Preprocess the input and make prediction
@@ -60,7 +59,6 @@ def predict():
             "status": "success",
             "result": result
         })
-
     except Exception as e:
         return jsonify({
             "status": "error",
